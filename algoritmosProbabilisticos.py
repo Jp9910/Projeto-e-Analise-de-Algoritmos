@@ -24,8 +24,8 @@ def lasVegas(X):
 def randomCongruenciaLinear(quantidade,startRange,endRange):
     r = [None]*(quantidade+1)
     b=3
-    #r[0] = int(time.time())
-    r[0] = 9910
+    r[0] = int(time.time())
+    #r[0] = 9910
 
     for i in range(1,quantidade+1):
         r[i] = ((r[i-1]*b + 1) % endRange)+startRange
@@ -33,7 +33,7 @@ def randomCongruenciaLinear(quantidade,startRange,endRange):
     r.pop(0)
     return r
 
-X = randomCongruenciaLinear(4,1,3)
+X = randomCongruenciaLinear(4,7,14)
 print(X)
 
 r = monteCarlo(X,len(X),5)

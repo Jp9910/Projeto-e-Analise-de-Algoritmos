@@ -135,7 +135,10 @@ def trassarPoligonoSimples(pontos): #O(nlogn)
         slope[1] = (pontos[1].y - pontos[0].y)/(pontos[1].x-pontos[0].x)
         minSlope = slope[1]
         for i in range(2,n):
-            slope[i] = (pontos[i].y - pontos[0].y)/(pontos[i].x - pontos[0].x)
+            try:
+                slope[i] = (pontos[i].y - pontos[0].y)/(pontos[i].x - pontos[0].x)
+            except ZeroDivisionError:
+                slope[i] = 999999 #infinito
             if(slope[i] < minSlope):
                 minSlope = slope[i]
         return minSlope
@@ -226,6 +229,7 @@ def graham(P):
     return H,m
 
 def jarvismarch(points):
+    #não funciona
     def _dist(p, q):
         dx, dy = q[0] - p[0], q[1] - p[1]
         return dx * dx + dy * dy
@@ -245,14 +249,14 @@ def jarvismarch(points):
             hull.append(q)
     return hull
     
-def pontoExtremo(pontos,n): #O(n)
-        #Entrada: vetor pontos de n pontos
-        #Saída: índice do ponto extremo (maior coordenada x, com menor y como desempate)
-        extremo = 0
-        for i in range(1,n):
-            if(pontos[i].x > pontos[extremo].x) or ((pontos[i].x == pontos[extremo].x)and(pontos[i].y < pontos[extremo].y)):
-                extremo = i
-        return extremo
+def area(pontos):
+    n = len(pontos)
+    A = 0
+    for i in range(0,n):
+        j=(i+1)%n
+        A = A + pontos[i].x*pontos[j].y
+        A = A - pontos[i].y*pontos[j].x
+    return A/2
 
 p = Ponto(10,10)
 q = Ponto(11,9)
@@ -280,6 +284,7 @@ trassarPoligonoSimples(pontos)
 print("\nPoligono simples:")
 for i in range(0,len(pontos)):
         print(pontos[i].x,pontos[i].y,end=' --> ')
+print("\narea do poligono:",area(pontos))
 
 print("\n---------------------------------------------------------\n")
 envoltoria,m = graham(pontos)
@@ -287,8 +292,12 @@ print("\nEnvoltória graham:")
 for i in range(0,m+1):
     print(envoltoria[i].x,envoltoria[i].y,end=' --> ')
 
-pontos = [Ponto(-1,2),Ponto(-1,-1),Ponto(1,0),Ponto(2,2),Ponto(2,-2),Ponto(3,3),Ponto(4,0),Ponto(3,-3)]
-envoltoria = jarvismarch(pontos)
-print("\n\nEnvoltória jarvisMarch:")
-for i in range(0,len(envoltoria)):
-    print(envoltoria[i].x,envoltoria[i].y,end=' --> ')
+pontos = [Ponto(0,0),Ponto(1,2),Ponto(3,0),Ponto(4,2)]
+trassarPoligonoSimples(pontos)
+print("\narea:",area(pontos))
+
+#pontos = [Ponto(-1,2),Ponto(-1,-1),Ponto(1,0),Ponto(2,2),Ponto(2,-2),Ponto(3,3),Ponto(4,0),Ponto(3,-3)]
+#envoltoria = jarvismarch(pontos)
+#print("\n\nEnvoltória jarvisMarch:")
+#for i in range(0,len(envoltoria)):
+#    print(envoltoria[i].x,envoltoria[i].y,end=' --> ')
